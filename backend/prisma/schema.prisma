@@ -24,6 +24,7 @@ model User {
   email    String @unique
   password String
   role     Role   @default(USER)
+  //Bookings
 }
 
 model Movie {
@@ -34,6 +35,7 @@ model Movie {
   language  String
   //shows
   createdAt DateTime @default(now())
+  Show      Show[]
 }
 
 model Theater {
@@ -42,4 +44,26 @@ model Theater {
   location  String
   //Screens
   createdAt DateTime @default(now())
+  Screen    Screen[]
+}
+
+model Screen {
+  id        String  @id @default(cuid())
+  name      String
+  theaterId String
+  theater   Theater @relation(fields: [theaterId], references: [id])
+  capacity  Int
+  //Shows
+  Show      Show[]
+}
+
+model Show {
+  id        String   @id @default(cuid())
+  movie     Movie    @relation(fields: [movieId], references: [id])
+  movieId   String
+  screen    Screen   @relation(fields: [screenId], references: [id])
+  screenId  String
+  startTime DateTime
+  price     Float
+  //Bookings
 }

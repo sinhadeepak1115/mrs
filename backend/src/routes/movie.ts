@@ -1,22 +1,27 @@
 import { Router } from "express";
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { authenticate } from "../middleware";
 
 const router = Router();
 const prisma = new PrismaClient();
 
-router.get("/", async (req: Request, res: Response): Promise<void> => {
-  try {
-    const movies = await prisma.movie.findMany();
-    if (!movies || movies.length === 0) {
-      res.status(404).json({ error: "No movies found" });
+router.get(
+  "/",
+  authenticate,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const movies = await prisma.movie.findMany();
+      if (!movies || movies.length === 0) {
+        res.status(404).json({ error: "No movies found" });
+      }
+      res.status(200).json(movies);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+      res.status(500).json({ error: "Unable to fetch movies" });
     }
-    res.status(200).json(movies);
-  } catch (error) {
-    console.error("Error fetching movies:", error);
-    res.status(500).json({ error: "Unable to fetch movies" });
-  }
-});
+  },
+);
 
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   const id = req.params.id;

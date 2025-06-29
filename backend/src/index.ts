@@ -1,6 +1,8 @@
 import express from "express";
-import user from "./routes/user.js";
-import movie from "./routes/movie.js";
+import user from "./routes/user";
+import movie from "./routes/movie";
+import theater from "./routes/theater";
+import screen from "./routes/screen";
 
 const PORT = process.env.PORT || 3000;
 
@@ -10,5 +12,7 @@ app.use(express.json());
 
 app.use("/api/v1/user", user);
 app.use("/api/v1/movie", movie);
+app.use("/api/v1/theater", theater);
+app.use("/api/v1/screen", screen);
 
 app.listen(PORT);
