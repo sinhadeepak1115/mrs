@@ -18,18 +18,14 @@ const prisma = new client_1.PrismaClient();
 // GET    /api/bookings            # Get all bookings of logged-in user
 // GET    /api/bookings/:id        # Get one booking
 // DELETE /api/bookings/:id        # Cancel booking
+//User route
 router.get("/", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //@ts-ignore
     const userId = req.userId;
-    if (!userId) {
-        res.status(400).json({ error: "User ID is required" });
-        return;
-    }
     try {
         const allBookings = yield prisma.booking.findMany({
             where: { userId: userId },
         });
-        console.log("Bookings fetched:", allBookings);
         res.status(200).json({
             message: "Bookings fetched successfully",
             bookings: allBookings,
@@ -38,6 +34,58 @@ router.get("/", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 
     catch (error) {
         console.error("Error fetching bookings:", error);
         res.status(500).json({ error: "Unable to fetch bookings" });
+    }
+}));
+//User route
+router.get("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //@ts-ignore
+    const userId = req.userId;
+    const bookingId = req.params.id;
+    try {
+        const booking = yield prisma.booking.findUnique({
+            where: { id: bookingId, userId: userId },
+        });
+        res
+            .status(200)
+            .json({ message: "Booking fetched successfully", booking });
+    }
+    catch (error) { }
+}));
+//User route
+router.post("/", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, showId, seatCount, total, status } = req.body;
+    try {
+        const newBooking = yield prisma.booking.create({
+            data: { userId, showId, seatCount, total, status },
+        });
+        res
+            .status(201)
+            .json({ message: "Booking created successfully", booking: newBooking });
+    }
+    catch (error) {
+        console.error("Error creating booking:", error);
+        res.status(500).json({ error: "Unable to create booking" });
+    }
+}));
+//User route
+router.delete("/:id", middleware_1.authenticate, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const bookingId = req.params.id;
+    if (!bookingId) {
+        res.status(400).json({ error: "Booking ID is required" });
+        return;
+    }
+    try {
+        const deletedBooking = yield prisma.booking.delete({
+            where: { id: bookingId },
+        });
+        res.status(200).json({
+            message: "Booking deleted successfully",
+            booking: deletedBooking,
+        });
+    }
+    catch (error) {
+        console.error("Error deleting booking:", error);
+        res.status(500).json({ error: "Unable to delete booking" });
     }
 }));
 exports.default = router;

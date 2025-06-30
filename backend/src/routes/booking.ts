@@ -22,7 +22,6 @@ router.get(
       const allBookings = await prisma.booking.findMany({
         where: { userId: userId },
       });
-      console.log("Bookings fetched:", allBookings);
       res.status(200).json({
         message: "Bookings fetched successfully",
         bookings: allBookings,
@@ -34,6 +33,7 @@ router.get(
   },
 );
 
+//User route
 router.get(
   "/:id",
   authenticate,
@@ -52,6 +52,7 @@ router.get(
   },
 );
 
+//User route
 router.post(
   "/",
   authenticate,
@@ -71,6 +72,7 @@ router.post(
   },
 );
 
+//User route
 router.delete(
   "/:id",
   authenticate,
@@ -83,6 +85,10 @@ router.delete(
     try {
       const deletedBooking = await prisma.booking.delete({
         where: { id: bookingId },
+      });
+      res.status(200).json({
+        message: "Booking deleted successfully",
+        booking: deletedBooking,
       });
     } catch (error) {
       console.error("Error deleting booking:", error);
