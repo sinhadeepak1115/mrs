@@ -5,6 +5,16 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
+router.get("/", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const screens = await prisma.screen.findMany();
+    res.status(200).json(screens);
+  } catch (error) {
+    console.error("Error fetching screens:", error);
+    res.status(500).json({ error: "Unable to fetch screens" });
+  }
+});
+
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
   const id = req.params.id;
   try {
