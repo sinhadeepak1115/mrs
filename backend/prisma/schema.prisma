@@ -19,12 +19,13 @@ enum Role {
 }
 
 model User {
-  id       String @id @default(cuid())
+  id       String    @id @default(cuid())
   name     String
-  email    String @unique
+  email    String    @unique
   password String
-  role     Role   @default(USER)
+  role     Role      @default(USER)
   //Bookings
+  Booking  Booking[]
 }
 
 model Movie {
@@ -58,12 +59,31 @@ model Screen {
 }
 
 model Show {
-  id        String   @id @default(cuid())
-  movie     Movie    @relation(fields: [movieId], references: [id])
+  id        String    @id @default(cuid())
+  movie     Movie     @relation(fields: [movieId], references: [id])
   movieId   String
-  screen    Screen   @relation(fields: [screenId], references: [id])
+  screen    Screen    @relation(fields: [screenId], references: [id])
   screenId  String
   startTime DateTime
   price     Float
   //Bookings
+  Booking   Booking[]
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model Booking {
+  id        String        @id @default(cuid())
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+  show      Show          @relation(fields: [showId], references: [id])
+  showId    String
+  seatCount Int
+  total     Float
+  status    BookingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
 }

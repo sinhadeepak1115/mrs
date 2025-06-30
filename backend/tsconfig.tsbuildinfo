@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/middleware.ts","./src/routes/movie.ts","./src/routes/screen.ts","./src/routes/show.ts","./src/routes/theater.ts","./src/routes/user.ts"],"version":"5.8.3"}
+{"root":["./src/index.ts","./src/middleware.ts","./src/routes/booking.ts","./src/routes/movie.ts","./src/routes/screen.ts","./src/routes/show.ts","./src/routes/theater.ts","./src/routes/user.ts"],"version":"5.8.3"}
